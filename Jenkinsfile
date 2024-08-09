@@ -67,7 +67,10 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-
+                        sh 'git config --global user.email "jenkins@example.com"'
+                        sh 'git config --global user.name "jenkins"'
+                        sh 'git config --list'
+                        
                         sh "git remote set-url origin https://${USER}:${PASS}@github.com/ManideepM777/aws-jenkins-project.git"
                         sh 'git add .'
                         sh 'git commit -m "ci: version bump"'
