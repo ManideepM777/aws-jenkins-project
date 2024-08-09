@@ -68,7 +68,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
 
-                        sh "git remote set-url origin https://${USER}:${PASS}@github.com/ManideepM777/aws-jenkins-project"
+                        sh "git remote set-url origin https://${USER}:${PASS}@github.com/ManideepM777/aws-jenkins-project.git"
                         sh 'git add .'
                         sh 'git commit -m "ci: version bump"'
                         sh 'git push origin HEAD:aws-dockercmp-jenkins'
