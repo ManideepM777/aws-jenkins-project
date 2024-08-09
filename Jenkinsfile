@@ -28,9 +28,9 @@ pipeline {
             steps {
                 script {
                    echo 'building docker image...'
-                   buildImage(imageName)
+                   buildImage(IMAGE_NAME)
                    dockerLogin()
-                   dockerPush(imageName)
+                   dockerPush(IMAGE_NAME)
                 }
             }
         }
