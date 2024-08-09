@@ -38,9 +38,9 @@ pipeline {
             steps {
                 script {
                    echo 'building docker image...'
-                   buildImage 'manideepm777/java-app:1.0'
+                   buildImage "manideepm777/java-app:${IMAGE_NAME}"
                    dockerLogin()
-                   dockerPush 'manideepm777/java-app:1.0' 
+                   dockerPush "manideepm777/java-app:${IMAGE_NAME}" 
                 }
             }
         }
