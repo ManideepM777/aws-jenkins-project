@@ -16,13 +16,32 @@ pipeline {
         IMAGE_NAME = 'manideepm777/java-app:1.0'
     }
     stages {
-        stage('version increment') {
+        stage('increment version') {
             steps {
                 script {
-                    versionIncrement()
+                    echo 'incrementing app version...'
+                    sh 'mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
+                        versions:commit'
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    def version = matcher[0][1]
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
                 }
             }
-        }    
+        }  
+        stage('commit version update') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+
+                        sh "git remote set-url origin https://${USER}:${PASS}@github.com/ManideepM777/aws-jenkins-project"
+                        sh 'git add .'
+                        sh 'git commit -m "ci: version bump"'
+                        sh 'git push origin HEAD:aws-dockercmp-jenkins'
+                    }
+                }
+            }
+        }
         stage('build app') {
             steps {
                script {
