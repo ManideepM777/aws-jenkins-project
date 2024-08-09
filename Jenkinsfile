@@ -23,7 +23,7 @@ pipeline {
                     echo "deploying the application"
                     def dockerCmd = 'docker run -p 80:80 -d manideepm777/node-example.1.0:latest'
                     sshagent(['aws-sshkey']) {
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@15.206.203.138 ${dockerCmd}"
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@43.204.101.30 ${dockerCmd}"
                     }
                 }
             }
