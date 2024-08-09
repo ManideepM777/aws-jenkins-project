@@ -16,6 +16,13 @@ pipeline {
         IMAGE_NAME = 'manideepm777/java-app:1.0'
     }
     stages {
+        stage('version increment') {
+            steps {
+                script {
+                    versionIncrement()
+                }
+            }
+        }    
         stage('build app') {
             steps {
                script {
