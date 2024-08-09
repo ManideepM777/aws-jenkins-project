@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim
+FROM openjdk:24-ea-9-jdk-slim-bookworm
 
 EXPOSE 8080
 
