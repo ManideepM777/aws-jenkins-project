@@ -12,6 +12,9 @@ pipeline {
     tools {
         maven 'Maven'
     }
+    environment {
+        IMAGE_NAME = 'manideepm777/java-app:1.0'
+    }
     stages {
         stage('increment version') {
             steps {
@@ -38,9 +41,11 @@ pipeline {
             steps {
                 script {
                    echo 'building docker image...'
-                   buildImage(env.IMAGE_NAME)
+                   def repository = 'manideepm777/java-app'
+                   def imageName = env.IMAGE_NAME 
+                   buildImage(repository, imageName)
                    dockerLogin()
-                   dockerPush(env.IMAGE_NAME)
+                   dockerPush(repository, imageName)
                 }
             }
         }
