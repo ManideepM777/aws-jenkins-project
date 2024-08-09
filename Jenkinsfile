@@ -12,9 +12,6 @@ pipeline {
     tools {
         maven 'Maven'
     }
-    environment {
-        IMAGE_NAME = 'manideepm777/java-app:1.0'
-    }
     stages {
         stage('increment version') {
             steps {
