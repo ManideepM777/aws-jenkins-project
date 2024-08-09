@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim-arm64
+FROM openjdk:11-jre-slim
 
 EXPOSE 8080
 
