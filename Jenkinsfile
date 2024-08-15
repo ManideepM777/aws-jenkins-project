@@ -32,7 +32,7 @@ pipeline {
                 script {
                     echo "building the docker image..."
                     withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                        sh "docker build -t manideepm777/java-cicd-app-pipeline:${IMAGE_NAME} ."
+                        sh "docker build -t manideepm777/java-cicd-app:${IMAGE_NAME} ."
                         sh "echo $PASS | docker login -u $USER --password-stdin"
                         sh "docker push manideepm777/java-cicd-app:${IMAGE_NAME}"
                     }
