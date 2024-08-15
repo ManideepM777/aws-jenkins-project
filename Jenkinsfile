@@ -6,8 +6,8 @@ pipeline {
         maven 'Maven'
     }
     environment {
-        ECR_REPO_URL = '664574038682.dkr.ecr.eu-west-3.amazonaws.com'
-        IMAGE_REPO = "${ECR_REPO_URL}/java-maven-app"
+        ECR_REPO_URL = '010438506105.dkr.ecr.us-east-1.amazonaws.com'
+        IMAGE_REPO = "${ECR_REPO_URL}/java-maven-app-cicd"
     }
     stages {
         stage('increment version') {
@@ -19,7 +19,7 @@ pipeline {
                         versions:commit'
                     def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
                     def version = matcher[0][1]
-                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
+                    env.IMAGE_NAME = "$version"
                     echo "############ ${IMAGE_REPO}"
                 }
             }
