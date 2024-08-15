@@ -31,22 +31,24 @@ pipeline {
             steps {
                 script {
                     echo "building the docker image..."
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                        sh "docker build -t nanajanashia/demo-app:${IMAGE_NAME} ."
+                    withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                        sh "docker build -t manideepm777/java-cicd-app-pipeline:${IMAGE_NAME} ."
                         sh "echo $PASS | docker login -u $USER --password-stdin"
-                        sh "docker push nanajanashia/demo-app:${IMAGE_NAME}"
+                        sh "docker push manideepm777/java-cicd-app:${IMAGE_NAME}"
                     }
                 }
             }
         }
         stage('deploy') {
+            environment {
+               AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
+               AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
+            }
             steps {
                 script {
-                    withKubeConfig([credentialsId: 'k8s-credentials', serverUrl: 'https://7293fae4-4c9d-4629-bc82-262d0a2b8e3c.eu-central-2.linodelke.net']) {
-                        withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                            sh "kubectl create secret docker-registry my-registry-key --docker-server=docker.io --docker-username=$USER --docker-password=$PASS"
-                        }
+                    echo 'deploying docker image...'
                         sh 'envsubst < kubernetes/deployment.yaml | kubectl apply -f -'
+                        sh 'envsubst < kubernetes/service.yaml | kubectl apply -f -'
                     }
                 }
             }
@@ -54,15 +56,15 @@ pipeline {
         stage('commit version update') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'gitlab-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                    withCredentials([usernamePassword(credentialsId: 'github-token', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
                         // git config here for the first time run
                         sh 'git config --global user.email "jenkins@example.com"'
                         sh 'git config --global user.name "jenkins"'
 
-                        sh "git remote set-url origin https://${USER}:${PASS}@gitlab.com/nanuchi/java-maven-app.git"
+                        sh "git remote set-url origin https://${USER}:${PASS}@github.com/ManideepM777/aws-jenkins-project.git"
                         sh 'git add .'
                         sh 'git commit -m "ci: version bump"'
-                        sh 'git push origin HEAD:jenkins-jobs'
+                        sh 'git push origin HEAD:complete-ci/cd-pipeline'
                     }
                 }
             }
